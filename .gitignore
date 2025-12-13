@@ -1,0 +1,25 @@
+# Nix build results
+result
+result-*
+
+# Flake lock file (commit this, but listing here for reference)
+# flake.lock
+
+# Editor artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Hardware configuration will be generated during installation
+# But keep the placeholder in git
+# hosts/desktop/hardware-configuration.nix
