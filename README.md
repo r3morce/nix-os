@@ -1,189 +1,212 @@
-# NixOS Configuration - Dual-Boot with CachyOS
+# 🐧 NixOS Configuration - Quick Start
 
-This repository contains my NixOS configuration using Nix Flakes for a dual-boot setup alongside CachyOS.
+> Dual-boot NixOS with KDE Plasma 6, NVIDIA gaming, and all your dotfiles auto-configured!
 
-## System Overview
+## 🚀 What You Get
 
-- **Desktop Environment**: KDE Plasma 6 + Wayland
-- **Shell**: Fish (default), Zsh (available)
-- **GPU**: NVIDIA RTX 3060 with proprietary drivers
-- **Theme**: Dracula everywhere
-- **Bootloader**: GRUB with os-prober for dual-boot
+- 🖥️ **KDE Plasma 6** + Wayland
+- 🎮 **NVIDIA RTX 3060** gaming ready
+- 🐚 **Fish shell** (with Dracula theme)
+- 🎨 **All dotfiles** auto-symlinked
+- 🔧 **Dev tools**: Node.js, Python, Claude Code, Git
+- 📦 **Apps**: Firefox, Vesktop, KeePassXC, Double Commander
 
-## Features
+## ⚡ Installation (Copy & Paste)
 
-- ✅ KDE Plasma 6 with Wayland support
-- ✅ NVIDIA drivers optimized for gaming and Wayland
-- ✅ Auto-mount `/dev/sdd1` to `/mnt/data`
-- ✅ Fish shell with Dracula theme (Zsh also available)
-- ✅ Gaming: Wine, Lutris, Steam (commented out, easy to enable)
-- ✅ Development: Node.js, Python, Docker (commented out), Claude Code
-- ✅ Modern CLI tools: eza, bat, ripgrep, fzf, zoxide, tldr, etc.
-- ✅ Services: Tailscale VPN, Syncthing file sync
-- ✅ Terminals: WezTerm, Ghostty
-- ✅ Desktop wallpaper: Auto-set from /home/mathias/bgimage
+### 1️⃣ Boot from USB
 
-## Directory Structure
+Reboot → Press `F12` or `Del` → Select USB → Boot
 
-```
-nix-os/
-├── flake.nix                          # Main flake entry
-├── flake.lock                         # Locked dependencies
-├── README.md                          # This file
-├── hosts/
-│   └── desktop/
-│       ├── default.nix                # Host configuration
-│       └── hardware-configuration.nix # Auto-generated during install
-└── modules/
-    ├── core/
-    │   ├── boot.nix                   # GRUB bootloader
-    │   ├── filesystems.nix            # Filesystem mounts
-    │   ├── locale.nix                 # Localization
-    │   ├── shell.nix                  # Fish + Zsh
-    │   └── users.nix                  # User configuration
-    ├── desktop/
-    │   ├── fonts.nix                  # Font configuration
-    │   └── plasma.nix                 # KDE Plasma 6
-    ├── development/
-    │   ├── docker.nix                 # Docker (commented out)
-    │   ├── nodejs.nix                 # Node.js
-    │   └── python.nix                 # Python
-    ├── gaming/
-    │   ├── steam.nix                  # Steam (commented out)
-    │   └── wine.nix                   # Wine, Lutris
-    └── hardware/
-        └── nvidia.nix                 # NVIDIA drivers
-```
-
-## Installation
-
-### Prerequisites
-
-1. **Backup everything!**
-   ```bash
-   tar -czf ~/backup-setup-$(date +%Y%m%d).tar.gz ~/Setup/
-   tar -czf ~/backup-home-$(date +%Y%m%d).tar.gz ~/.config
-   ```
-
-2. **Download NixOS ISO** (unstable for latest packages)
-
-3. **Create bootable USB**
-
-### Installation Steps
-
-1. **Boot from NixOS live USB**
-
-2. **Enable flakes**:
-   ```bash
-   mkdir -p ~/.config/nix
-   echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-   ```
-
-3. **Partition disk** (if needed):
-   ```bash
-   # Shrink CachyOS partition and create new partition for NixOS
-   # See plan.md for detailed instructions
-   ```
-
-4. **Mount partitions**:
-   ```bash
-   sudo mount /dev/nvme0n1p3 /mnt
-   sudo mkdir /mnt/boot
-   sudo mount /dev/nvme0n1p1 /mnt/boot
-   ```
-
-5. **Generate hardware config**:
-   ```bash
-   nixos-generate-config --root /mnt
-   ```
-
-6. **Clone this repo**:
-   ```bash
-   git clone <your-repo-url> /mnt/etc/nixos
-   ```
-
-7. **Copy hardware config to flake**:
-   ```bash
-   cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/nix-os/hosts/desktop/
-   ```
-
-8. **Install NixOS**:
-   ```bash
-   sudo nixos-install --flake /mnt/etc/nixos/nix-os#desktop
-   ```
-
-9. **Reboot and enjoy!**
-
-## Post-Installation
-
-1. **Change password**:
-   ```bash
-   passwd
-   ```
-
-2. **Deploy dotfiles** (your existing Stow setup):
-   ```bash
-   cd ~/Setup
-   make setup
-   ```
-
-3. **Enable optional modules** (if needed):
-   - Uncomment `../../modules/gaming/steam.nix` in `hosts/desktop/default.nix`
-   - Uncomment `../../modules/development/docker.nix` in `hosts/desktop/default.nix`
-   - Rebuild: `sudo nixos-rebuild switch --flake ~/nix-os#desktop`
-
-## Rebuilding the System
-
-After making changes to the configuration:
+### 2️⃣ Enable Flakes
 
 ```bash
-sudo nixos-rebuild switch --flake ~/nix-os#desktop
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 ```
 
-## Testing Before Applying
+### 3️⃣ Partition Disk
 
-Test configuration without switching:
+**⚠️ This shrinks your CachyOS partition by 200GB!**
 
 ```bash
-sudo nixos-rebuild test --flake ~/nix-os#desktop
+# Check your disk
+lsblk
+
+# Shrink CachyOS
+sudo mount /dev/nvme0n1p2 /mnt
+sudo btrfs filesystem resize -200G /mnt
+sudo umount /mnt
+
+# Create NixOS partition
+sudo parted /dev/nvme0n1 mkpart primary ext4 730GB 930GB
+sudo mkfs.ext4 -L NixOS /dev/nvme0n1p3
 ```
 
-## Validation
-
-Check flake syntax:
+### 4️⃣ Mount Everything
 
 ```bash
-cd ~/nix-os
-nix flake check
+sudo mount /dev/nvme0n1p3 /mnt
+sudo mkdir /mnt/boot
+sudo mount /dev/nvme0n1p1 /mnt/boot
 ```
 
-## Troubleshooting
+### 5️⃣ Get Configuration
 
-### NVIDIA not loading
 ```bash
-lsmod | grep nvidia
+# Generate hardware config
+sudo nixos-generate-config --root /mnt
+
+# Clone this repo
+git clone https://github.com/r3morce/nix-os /mnt/etc/nixos
+
+# Copy hardware config
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/
+```
+
+### 6️⃣ Install NixOS
+
+```bash
+sudo nixos-install --flake /mnt/etc/nixos#desktop
+```
+
+Enter root password when asked, then:
+
+```bash
+reboot
+```
+
+## 🎉 After First Boot
+
+### Change Password
+
+```bash
+passwd
+```
+
+### Enable Steam (Optional)
+
+Edit this file:
+```bash
+sudo nano /etc/nixos/hosts/desktop/default.nix
+```
+
+Uncomment this line:
+```nix
+# ../../modules/gaming/steam.nix  ← Remove the #
+```
+
+Rebuild:
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#desktop
+```
+
+### Enable Docker (Optional)
+
+Same process - uncomment:
+```nix
+# ../../modules/development/docker.nix  ← Remove the #
+```
+
+Then rebuild.
+
+## 📝 Quick Commands
+
+### Update System
+
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#desktop
+```
+
+### Update Flake Inputs
+
+```bash
+cd /etc/nixos
+sudo nix flake update
+sudo nixos-rebuild switch --flake .#desktop
+```
+
+### Edit Configuration
+
+```bash
+cd /etc/nixos
+nano hosts/desktop/default.nix
+```
+
+## 🔧 What's Included
+
+### 🎯 System
+- Auto-mount `/dev/sdd1` → `/mnt/data`
+- Wallpaper from `/home/mathias/bgimage`
+- German locale, Europe/Berlin timezone
+- GRUB dual-boot
+
+### 📦 Apps
+- Firefox, Vesktop (Discord), KeePassXC
+- WezTerm, Ghostty (terminals)
+- Double Commander
+- Neovim, Claude Code
+
+### 🛠️ CLI Tools
+- `eza` (better ls)
+- `bat` (better cat)
+- `ripgrep` (better grep)
+- `fzf` (fuzzy finder)
+- `zoxide` (smart cd)
+- `tldr` (simple man pages)
+- `fastfetch` (system info)
+
+### 🌐 Services
+- Tailscale VPN
+- Syncthing (file sync)
+
+### 🎮 Gaming (Optional)
+- Steam + Proton
+- Wine, Lutris
+- GameMode, MangoHud
+
+## 📂 Your Dotfiles
+
+All in `dotfiles/` - automatically symlinked by Home Manager:
+- Neovim config
+- WezTerm config
+- Zellij config
+- Zsh + Powerlevel10k
+
+## ❓ Troubleshooting
+
+### NVIDIA not working?
+
+```bash
 nvidia-smi
 ```
 
-### GRUB doesn't detect CachyOS
+Should show your GPU. If not:
+
 ```bash
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo nixos-rebuild switch --flake /etc/nixos#desktop
 ```
 
-### Check Wayland session
+### Check if Wayland is running
+
 ```bash
-echo $XDG_SESSION_TYPE  # Should output: wayland
+echo $XDG_SESSION_TYPE
 ```
 
-## Resources
+Should output: `wayland`
 
-- [NixOS Manual](https://nixos.org/manual/nixos/stable/)
-- [NixOS Search](https://search.nixos.org/packages)
-- [Plan File](~/.claude/plans/swirling-mixing-horizon.md) - Detailed installation plan
+### Rebuild broke something?
 
-## Notes
+```bash
+# Boot into previous generation from GRUB
+# Then fix your config and rebuild
+```
 
-- **Docker & Steam** are commented out by default - uncomment in `hosts/desktop/default.nix` to enable
-- **Fish** is the default shell, **Zsh** is available (run `zsh` to switch)
-- **Dotfiles** are managed via Stow from `~/Setup/` - not via Home Manager
-- **KDE configs** from CachyOS will be preserved and work on NixOS
+## 🔗 Links
+
+- 📖 [NixOS Manual](https://nixos.org/manual/nixos/stable/)
+- 🔍 [Package Search](https://search.nixos.org/packages)
+- 💻 [GitHub Repo](https://github.com/r3morce/nix-os)
+
+---
+
+**Made with 🤖 Claude Code**

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Dev session launcher with zellij
+# Usage: dev [directory]
+
+# Set the directory to use (current directory or argument)
+DEV_DIR="${1:-$(pwd)}"
+
+# Change to the directory
+cd "$DEV_DIR" || exit 1
+
+# Launch zellij with dev layout
+exec zellij --layout ~/.config/zellij/layout.kdl --session dev

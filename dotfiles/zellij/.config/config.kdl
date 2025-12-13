@@ -1,0 +1,20 @@
+// Zellij configuration
+theme "dracula"
+default_shell "zsh"
+pane_frames true
+mouse_mode true
+copy_on_select true
+copy_command "wl-copy"
+simplified_ui false
+session_serialization true
+
+keybinds {
+    shared_except "locked" {
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Alt [" { PreviousSwapLayout; }
+        bind "Alt ]" { NextSwapLayout; }
+    }
+    pane {
+        bind "Tab" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+    }
+}
