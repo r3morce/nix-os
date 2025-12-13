@@ -69,4 +69,43 @@
       font-family = "FiraCode Nerd Font"
     '';
   };
+
+  # Wallpaper
+  home.file."bgimage" = {
+    source = ./bgimage;
+  };
+
+  # Yazi Dracula theme
+  home.file.".config/yazi/theme.toml" = {
+    text = ''
+      # Dracula theme for Yazi
+      [manager]
+      cwd = { fg = "#bd93f9" }
+
+      [status]
+      separator_style = { fg = "#6272a4", bg = "#6272a4" }
+
+      [filetype]
+      rules = [
+        { mime = "image/*", fg = "#ffb86c" },
+        { mime = "video/*", fg = "#ff79c6" },
+        { mime = "audio/*", fg = "#f1fa8c" },
+        { mime = "application/zip", fg = "#bd93f9" },
+        { mime = "application/gzip", fg = "#bd93f9" },
+      ]
+
+      [colors]
+      bg = "#282a36"
+      fg = "#f8f8f2"
+      selection = "#44475a"
+      comment = "#6272a4"
+      cyan = "#8be9fd"
+      green = "#50fa7b"
+      orange = "#ffb86c"
+      pink = "#ff79c6"
+      purple = "#bd93f9"
+      red = "#ff5555"
+      yellow = "#f1fa8c"
+    '';
+  };
 }

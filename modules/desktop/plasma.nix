@@ -45,6 +45,9 @@
     vesktop                      # Discord client with Wayland support
     keepassxc                    # Password manager
     doublecmd                    # Dual-pane file manager
+    obsidian                     # Note-taking app
+    # libreoffice-qt             # Office suite (uncomment if needed)
+    yazi                         # Terminal file manager
 
     # Terminal & Tools
     wezterm                      # Your preferred terminal
@@ -65,6 +68,8 @@
     gh                           # GitHub CLI
     lazygit                      # Git TUI
     neovim                       # Editor
+    helix                        # Modern modal editor
+    vscodium                     # VS Code without telemetry
     claude-code                  # Claude AI CLI
 
     # System utilities

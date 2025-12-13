@@ -11,33 +11,11 @@
 - 🔧 **Dev tools**: Node.js, Python, Claude Code, Git
 - 📦 **Apps**: Firefox, Vesktop, KeePassXC, Double Commander
 
-## 📀 Prepare USB (Before Installation)
-
-### Create Bootable USB
+## 📀 Prepare Installation USB
 
 1. Download NixOS ISO from https://nixos.org/download
 2. Flash to USB with Balena Etcher
-
-### Copy Config to USB
-
-After flashing, the USB will have two partitions. Copy this repo to the data partition:
-
-```bash
-# Find your USB device
-lsblk
-
-# Mount the second partition (usually the larger one)
-sudo mkdir -p /mnt/usb
-sudo mount /dev/sdb2 /mnt/usb  # Adjust sdb2 to your USB
-
-# Copy this repo to USB
-sudo cp -r ~/nix-os /mnt/usb/
-
-# Unmount
-sudo umount /mnt/usb
-```
-
-Now your USB has both the NixOS installer and your configuration! 🎉
+3. Make sure you have WiFi available (you'll clone the config from GitHub)
 
 ---
 
