@@ -19,8 +19,14 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+  # Keyboard layout - US International
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "altgr-intl";  # US International with dead keys
+  };
+
   # Console keymap
   console = {
-    keyMap = "de";
+    keyMap = "us";
   };
 }

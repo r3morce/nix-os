@@ -18,12 +18,12 @@
 
     # Gaming (Steam commented out - uncomment to enable)
     # ../../modules/gaming/steam.nix
-    ../../modules/gaming/wine.nix
+    # ../../modules/gaming/wine.nix
 
     # Development (Docker commented out - uncomment to enable)
     # ../../modules/development/docker.nix
-    ../../modules/development/nodejs.nix
-    ../../modules/development/python.nix
+    # ../../modules/development/nodejs.nix
+    # ../../modules/development/python.nix
   ];
 
   # System hostname
