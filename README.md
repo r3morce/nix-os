@@ -66,20 +66,20 @@ git clone https://github.com/r3morce/nix-os /tmp/nix-os
 ### 5️⃣ Prepare Configuration
 
 ```bash
-# Generate hardware config
-nixos-generate-config --root /mnt
+# Generate hardware config to temp location
+nixos-generate-config --root /mnt --dir /tmp
 
 # Copy repo to install location
 cp -r /tmp/nix-os /mnt/etc/nixos
 
 # Move generated hardware config to correct location
-mv /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix
+mv /tmp/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix
 ```
 
 ### 6️⃣ Install NixOS
 
 ```bash
-nixos-install --root /mnt --flake /mnt/etc/nixos#desktop
+nixos-install --flake /mnt/etc/nixos#desktop
 ```
 
 Set root password when asked, then:
