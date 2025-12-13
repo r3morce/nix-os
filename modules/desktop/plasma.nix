@@ -77,6 +77,9 @@
     curl
     unzip
     zip
+
+    # Dracula themes
+    dracula-theme                # GTK theme
   ];
 
   # Enable dbus for desktop applications
@@ -108,4 +111,13 @@
       Restart = "no";
     };
   };
+
+  # Dracula theme configuration
+  environment.sessionVariables = {
+    BAT_THEME = "Dracula";           # Bat uses Dracula theme
+    GTK_THEME = "Dracula";           # GTK apps use Dracula
+  };
+
+  # Note: For KDE Plasma Dracula theme, install from KDE Store or configure manually:
+  # System Settings -> Appearance -> Global Theme -> Get New Global Themes -> Search "Dracula"
 }

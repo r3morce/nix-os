@@ -53,4 +53,20 @@
   #   source = ./dotfiles/fish/.config/fish;
   #   recursive = true;
   # };
+
+  # btop Dracula theme
+  home.file.".config/btop/btop.conf" = {
+    text = ''
+      color_theme = "dracula"
+      theme_background = False
+    '';
+  };
+
+  # Ghostty Dracula theme
+  home.file.".config/ghostty/config" = {
+    text = ''
+      theme = dracula
+      font-family = "FiraCode Nerd Font"
+    '';
+  };
 }
