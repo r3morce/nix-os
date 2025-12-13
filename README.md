@@ -59,20 +59,6 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
 ### 4️⃣ Get Configuration
 
-**Option A: From USB (if you copied repo to USB)**
-
-```bash
-# Mount USB
-mkdir -p /mnt/usb
-mount /dev/sdb1 /mnt/usb  # Adjust sdb1 to your USB device
-
-# Copy repo
-cp -r /mnt/usb/nix-os /tmp/nix-os
-umount /mnt/usb
-```
-
-**Option B: Clone from GitHub**
-
 ```bash
 git clone https://github.com/r3morce/nix-os /tmp/nix-os
 ```
