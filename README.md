@@ -17,63 +17,67 @@
 
 Reboot → Press `F12` or `Del` → Select USB → Boot
 
-### 2️⃣ Enable Flakes
+### 2️⃣ Partition & Mount Your Disk
+
+**Do this yourself with your preferred tool (GParted, parted, etc.)**
+
+You need:
+- EFI partition (512MB, FAT32) mounted at `/mnt/boot`
+- Root partition (rest of disk, ext4) mounted at `/mnt`
+
+Check with:
+```bash
+lsblk
+mount | grep /mnt
+```
+
+### 3️⃣ Enable Flakes
 
 ```bash
 mkdir -p ~/.config/nix
 echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 ```
 
-### 3️⃣ Partition Disk
+### 4️⃣ Get Configuration
 
-**Fresh SSD install - wipes everything!**
-
-```bash
-# Check your disks
-lsblk
-
-# Partition the disk (replace sdX with your SSD, e.g., nvme0n1)
-sudo parted /dev/sdX -- mklabel gpt
-sudo parted /dev/sdX -- mkpart ESP fat32 1MiB 512MiB
-sudo parted /dev/sdX -- set 1 esp on
-sudo parted /dev/sdX -- mkpart primary 512MiB 100%
-
-# Format partitions
-sudo mkfs.fat -F 32 -n EFI /dev/sdX1
-sudo mkfs.ext4 -L NixOS /dev/sdX2
-```
-
-### 4️⃣ Mount Everything
+**Option A: From USB (if you copied repo to USB)**
 
 ```bash
-# Mount root
-sudo mount /dev/sdX2 /mnt
+# Mount USB
+mkdir -p /mnt/usb
+mount /dev/sdb1 /mnt/usb  # Adjust sdb1 to your USB device
 
-# Mount boot
-sudo mkdir -p /mnt/boot
-sudo mount /dev/sdX1 /mnt/boot
+# Copy repo
+cp -r /mnt/usb/nix-os /tmp/nix-os
+umount /mnt/usb
 ```
 
-### 5️⃣ Get Configuration
+**Option B: Clone from GitHub**
+
+```bash
+git clone https://github.com/r3morce/nix-os /tmp/nix-os
+```
+
+### 5️⃣ Prepare Configuration
 
 ```bash
 # Generate hardware config
-sudo nixos-generate-config --root /mnt
+nixos-generate-config --root /mnt
 
-# Clone this repo
-git clone https://github.com/r3morce/nix-os /mnt/etc/nixos
+# Copy repo to install location
+cp -r /tmp/nix-os /mnt/etc/nixos
 
-# Copy hardware config
-sudo cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/
+# Move generated hardware config to correct location
+mv /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix
 ```
 
 ### 6️⃣ Install NixOS
 
 ```bash
-sudo nixos-install --flake /mnt/etc/nixos#desktop
+nixos-install --root /mnt --flake /mnt/etc/nixos#desktop
 ```
 
-Enter root password when asked, then:
+Set root password when asked, then:
 
 ```bash
 reboot
