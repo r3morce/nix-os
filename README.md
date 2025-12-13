@@ -25,37 +25,26 @@
 
 Reboot → Press `F12` or `Del` → Select USB → Boot
 
-### 2️⃣ Partition & Mount Your Disk
-
-**Option A: Use GParted (graphical)**
-
-Just create:
-- EFI partition (512MB, FAT32) mounted at `/mnt/boot`
-- Root partition (rest of disk, ext4) mounted at `/mnt`
-
-**Option B: Command line (copy & paste)**
+### 2️⃣ Partition & Format Your Disk
 
 ```bash
-# Find your disk first
+# Check your disk
 lsblk
 
-# ⚠️ Replace /dev/sdX with your actual disk (e.g., /dev/sdb)
-# This WIPES EVERYTHING on the disk!
+# Partition /dev/sdb
+sudo parted /dev/sdb -- mklabel gpt
+sudo parted /dev/sdb -- mkpart ESP fat32 1MiB 512MiB
+sudo parted /dev/sdb -- set 1 esp on
+sudo parted /dev/sdb -- mkpart primary 512MiB 100%
 
-# Partition
-sudo parted /dev/sdX -- mklabel gpt
-sudo parted /dev/sdX -- mkpart ESP fat32 1MiB 512MiB
-sudo parted /dev/sdX -- set 1 esp on
-sudo parted /dev/sdX -- mkpart primary 512MiB 100%
+# Format partitions
+sudo mkfs.fat -F 32 -n EFI /dev/sdb1
+sudo mkfs.ext4 -L NixOS /dev/sdb2
 
-# Format
-sudo mkfs.fat -F 32 -n EFI /dev/sdX1
-sudo mkfs.ext4 -L NixOS /dev/sdX2
-
-# Mount
-sudo mount /dev/sdX2 /mnt
+# Mount everything
+sudo mount /dev/sdb2 /mnt
 sudo mkdir -p /mnt/boot
-sudo mount /dev/sdX1 /mnt/boot
+sudo mount /dev/sdb1 /mnt/boot
 
 # Verify
 mount | grep /mnt
