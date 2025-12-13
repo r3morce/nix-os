@@ -1,6 +1,6 @@
 # 🐧 NixOS Configuration - Quick Start
 
-> Dual-boot NixOS with KDE Plasma 6, NVIDIA gaming, and all your dotfiles auto-configured!
+> Fresh NixOS install with KDE Plasma 6, NVIDIA gaming, and all your dotfiles auto-configured!
 
 ## 🚀 What You Get
 
@@ -26,28 +26,32 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
 ### 3️⃣ Partition Disk
 
-**⚠️ This shrinks your CachyOS partition by 200GB!**
+**Fresh SSD install - wipes everything!**
 
 ```bash
-# Check your disk
+# Check your disks
 lsblk
 
-# Shrink CachyOS
-sudo mount /dev/nvme0n1p2 /mnt
-sudo btrfs filesystem resize -200G /mnt
-sudo umount /mnt
+# Partition the disk (replace sdX with your SSD, e.g., nvme0n1)
+sudo parted /dev/sdX -- mklabel gpt
+sudo parted /dev/sdX -- mkpart ESP fat32 1MiB 512MiB
+sudo parted /dev/sdX -- set 1 esp on
+sudo parted /dev/sdX -- mkpart primary 512MiB 100%
 
-# Create NixOS partition
-sudo parted /dev/nvme0n1 mkpart primary ext4 730GB 930GB
-sudo mkfs.ext4 -L NixOS /dev/nvme0n1p3
+# Format partitions
+sudo mkfs.fat -F 32 -n EFI /dev/sdX1
+sudo mkfs.ext4 -L NixOS /dev/sdX2
 ```
 
 ### 4️⃣ Mount Everything
 
 ```bash
-sudo mount /dev/nvme0n1p3 /mnt
-sudo mkdir /mnt/boot
-sudo mount /dev/nvme0n1p1 /mnt/boot
+# Mount root
+sudo mount /dev/sdX2 /mnt
+
+# Mount boot
+sudo mkdir -p /mnt/boot
+sudo mount /dev/sdX1 /mnt/boot
 ```
 
 ### 5️⃣ Get Configuration
@@ -135,10 +139,10 @@ nano hosts/desktop/default.nix
 ## 🔧 What's Included
 
 ### 🎯 System
-- Auto-mount `/dev/sdd1` → `/mnt/data`
+- Auto-mount `/dev/sdd1` → `/mnt/data` (your data drive)
 - Wallpaper from `/home/mathias/bgimage`
 - German locale, Europe/Berlin timezone
-- GRUB dual-boot
+- GRUB bootloader
 
 ### 📦 Apps
 - Firefox, Vesktop (Discord), KeePassXC
