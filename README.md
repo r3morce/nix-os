@@ -1,29 +1,8 @@
 # 🐧 NixOS Configuration - Quick Start
 
-> Fresh NixOS install with KDE Plasma 6, NVIDIA gaming, and all your dotfiles auto-configured!
-
-## 🚀 What You Get
-
-- 🖥️ **KDE Plasma 6** + Wayland
-- 🎮 **NVIDIA RTX 3060** gaming ready
-- 🐚 **Fish shell** (with Dracula theme)
-- 🎨 **All dotfiles** auto-symlinked
-- 🔧 **Dev tools**: Node.js, Python, Claude Code, Git
-- 📦 **Apps**: Firefox, Vesktop, KeePassXC, Double Commander
-
-## 📀 Prepare Installation USB
-
-1. Download NixOS ISO from https://nixos.org/download
-2. Flash to USB with Balena Etcher
-3. Make sure you have WiFi available (you'll clone the config from GitHub)
-
----
-
-## ⚡ Installation (Copy & Paste)
+## ⚡ Installation
 
 ### 1️⃣ Boot from USB
-
-Reboot → Press `F12` or `Del` → Select USB → Boot
 
 ### 2️⃣ Partition & Format Your Disk
 
@@ -147,37 +126,15 @@ nano hosts/desktop/default.nix
 
 ## 🔧 What's Included
 
-### 🎯 System
 - Auto-mount `/dev/sdd1` → `/mnt/data` (your data drive)
 - Wallpaper from `/home/mathias/bgimage`
 - German locale, Europe/Berlin timezone
 - GRUB bootloader
-
-### 📦 Apps
-- Firefox, Vesktop (Discord), KeePassXC
-- WezTerm, Ghostty (terminals)
-- Double Commander
-- Neovim, Claude Code
-
-### 🛠️ CLI Tools
-- `eza` (better ls)
-- `bat` (better cat)
-- `ripgrep` (better grep)
-- `fzf` (fuzzy finder)
-- `zoxide` (smart cd)
-- `tldr` (simple man pages)
-- `fastfetch` (system info)
-
-### 🌐 Services
-- Tailscale VPN
-- Syncthing (file sync)
-
-### 🎮 Gaming (Optional)
-- Steam + Proton
-- Wine, Lutris
-- GameMode, MangoHud
-
-## 📂 Your Dotfiles
+- Apps
+- CLI Tools
+- Services
+- Gaming (Optional)
+- Dotfiles
 
 All in `dotfiles/` - automatically symlinked by Home Manager:
 - Neovim config
@@ -213,13 +170,3 @@ Should output: `wayland`
 # Boot into previous generation from GRUB
 # Then fix your config and rebuild
 ```
-
-## 🔗 Links
-
-- 📖 [NixOS Manual](https://nixos.org/manual/nixos/stable/)
-- 🔍 [Package Search](https://search.nixos.org/packages)
-- 💻 [GitHub Repo](https://github.com/r3morce/nix-os)
-
----
-
-**Made with 🤖 Claude Code**
