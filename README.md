@@ -39,6 +39,10 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 ### 4️⃣ Get Configuration
 
 ```bash
+sudo -i
+```
+
+```bash
 git clone https://github.com/r3morce/nix-os /tmp/nix-os
 ```
 
@@ -66,40 +70,6 @@ Set root password when asked, then:
 ```bash
 reboot
 ```
-
-## 🎉 After First Boot
-
-### Change Password
-
-```bash
-passwd
-```
-
-### Enable Steam (Optional)
-
-Edit this file:
-```bash
-sudo nano /etc/nixos/hosts/desktop/default.nix
-```
-
-Uncomment this line:
-```nix
-# ../../modules/gaming/steam.nix  ← Remove the #
-```
-
-Rebuild:
-```bash
-sudo nixos-rebuild switch --flake /etc/nixos#desktop
-```
-
-### Enable Docker (Optional)
-
-Same process - uncomment:
-```nix
-# ../../modules/development/docker.nix  ← Remove the #
-```
-
-Then rebuild.
 
 ## 📝 Quick Commands
 
@@ -136,12 +106,6 @@ nano hosts/desktop/default.nix
 - Gaming (Optional)
 - Dotfiles
 
-All in `dotfiles/` - automatically symlinked by Home Manager:
-- Neovim config
-- WezTerm config
-- Zellij config
-- Zsh + Powerlevel10k
-
 ## ❓ Troubleshooting
 
 ### NVIDIA not working?
@@ -170,3 +134,4 @@ Should output: `wayland`
 # Boot into previous generation from GRUB
 # Then fix your config and rebuild
 ```
+
